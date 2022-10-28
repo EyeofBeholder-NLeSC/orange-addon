@@ -1,7 +1,6 @@
 from Orange.widgets.widget import OWBaseWidget, Output
 from Orange.widgets import gui
 from Orange.data import Table, Domain, StringVariable
-from orangewidget.utils.widgetpreview import WidgetPreview
 
 from csvw import CSVW
 
@@ -69,4 +68,6 @@ class CSVWValidator(OWBaseWidget):
 
 
 if __name__ == "__main__":
+    from orangewidget.utils.widgetpreview import WidgetPreview
+
     WidgetPreview(CSVWValidator).run()
