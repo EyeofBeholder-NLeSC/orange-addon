@@ -13,7 +13,10 @@ def test_validator_output():
     """
     wt = WidgetTest()
     w = wt.create_widget(CSVWValidator)
+    w.metadata_url = (
+        "https://w3c.github.io/csvw/tests/test011/tree-ops.csv-metadata.json"
+    )
     w.submit()
     output = wt.get_output("CSV URLs", widget=w)
-    assert len(output) == 2
-    assert output[0].metas[0].endswith(".csv") and output[1].metas[0].endswith(".csv")
+    assert len(output) == 1
+    assert output[0].metas[0].endswith("tree-ops.csv")
