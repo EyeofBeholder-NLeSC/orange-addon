@@ -16,7 +16,6 @@ def test_reader_output():
         data=["https://w3c.github.io/csvw/tests/test011/tree-ops.csv"],
         columns=["csv_url"],
     )
-    print("input:", input_table)
     wt.send_signal(input="CSV URL", value=table_from_frame(input_table), widget=w)
     w.metadata_url = (
         "https://w3c.github.io/csvw/tests/test011/tree-ops.csv-metadata.json"
@@ -24,3 +23,4 @@ def test_reader_output():
     w.submit()
     output = wt.get_output("Data", widget=w)
     assert len(output) == 2
+    assert "ADDISON AV" in output[0].list
