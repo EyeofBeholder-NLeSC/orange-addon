@@ -20,6 +20,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 import networkx as nx
 from networkx.drawing.nx_agraph import graphviz_layout
+from typing import Tuple
 
 
 @Language.component("readability")
@@ -54,7 +55,9 @@ class ArgumentMiner(object):
         self.wv_model = api.load(model_name)
 
     @staticmethod
-    def __get_token_and_rank(doc: spacy.tokens.Doc, stopwords: list, trt: float = 0):
+    def __get_token_and_rank(
+        doc: spacy.tokens.Doc, stopwords: list, trt: float = 0
+    ) -> list[Tuple[str, float]]:
         """
         Get text rank of each token.
         """
@@ -66,10 +69,11 @@ class ArgumentMiner(object):
             text = " ".join(text)
             if token.rank and token.rank >= trt:
                 results.append((text, token.rank))
+
         return results
 
     @staticmethod
-    def __get_doc_readability(doc: spacy.tokens.Doc):
+    def __get_doc_readability(doc: spacy.tokens.Doc) -> float:
         """
         Get readability score of a document.
         """
@@ -90,7 +94,7 @@ class ArgumentMiner(object):
         self.df_arguments["ranks"] = ranks
         self.df_arguments["readability"] = readabilities
 
-    def get_all_tokens(self):
+    def get_all_tokens(self) -> np.ndarray:
         """
         Get the full list of tokens in the arguments
         """
@@ -104,7 +108,7 @@ class ArgumentMiner(object):
 
         return tokens
 
-    def __get_token_distance_matrix(self, tokens: np.array):
+    def __get_token_distance_matrix(self, tokens: np.array) -> pd.DataFrame:
         """
         Cluster tokens on the compute distance matrix by KMeans, return the cluster label list
         """
@@ -121,7 +125,7 @@ class ArgumentMiner(object):
         return dist_matrix
 
     @staticmethod
-    def __cluster(dist_matrix: pd.DataFrame, k: int):
+    def __cluster(dist_matrix: pd.DataFrame, k: int) -> Tuple[float, list]:
         """
         cluster the items involved in dist_matrix in k parts.
         """
@@ -133,7 +137,7 @@ class ArgumentMiner(object):
             silhouette = 0
         return silhouette, labels
 
-    def get_cluster_labels(self, tokens: np.array):
+    def get_cluster_labels(self, tokens: np.array) -> np.ndarray:
         """
         get clusters of tokens
         """
@@ -151,17 +155,20 @@ class ArgumentMiner(object):
     @staticmethod
     def __get_cluster_set(
         tokens: np.array, token_dictionary: np.array, cluster_labels: np.array
-    ):
+    ) -> set[int]:
         """
         Find the cluster labels of all tokens in a token list and return it as a set
         """
         indices = np.isin(token_dictionary, tokens)
         clusters = cluster_labels[indices]
+
         return set(clusters.flatten())
 
     # TODO: Tasks pending completion -@jiqi at 11/29/2022, 4:43:27 PM
     # refactor the create_netowrk function to split it into atomic functions
-    def create_network(self, tokens: np.array, cluster_labels: np.array, theta: int):
+    def create_network(
+        self, tokens: np.array, cluster_labels: np.array, theta: int
+    ) -> nx.Graph:
         """
         Compute the attacking relations between arguments and create the attacking network.
         """
