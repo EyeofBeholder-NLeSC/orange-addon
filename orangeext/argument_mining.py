@@ -16,7 +16,6 @@ from itertools import starmap, combinations
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 import networkx as nx
-from networkx.drawing.nx_agraph import graphviz_layout
 from typing import Tuple
 
 
@@ -294,3 +293,4 @@ if __name__ == "__main__":
     am.compute_ranks_and_readability()
     am.compute_clusters_and_weights()
     am.compute_network()
+    am.compute_network_node_colors()
