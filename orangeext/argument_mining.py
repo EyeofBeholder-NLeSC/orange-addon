@@ -249,6 +249,8 @@ class ArgumentMiner(object):
         for curr_group in range(1, 5):
             group_1 = self.df_arguments[self.df_arguments["overall"] == curr_group]
             group_2 = self.df_arguments[self.df_arguments["overall"] > curr_group]
+            if group_1.size == 0 or group_2.size == 0:
+                continue
             temp_source, temp_target, temp_weight = self.__get_attacks(group_1, group_2)
             df_network["source"] += temp_source
             df_network["target"] += temp_target
